@@ -1,6 +1,13 @@
 .cabeçalho{
-    bottom: 0;
     position: fixed;
-    height: 30%;
+    height: 0%;
     width: 100%;
+    top: 0;
+    display: flex;
+}
+
+.img{
+    top: 0;
+    display: flex;
+    position: right;
 }
