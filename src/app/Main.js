@@ -1,8 +1,6 @@
 'use server'
 import styles from "./main.module.css";
-import Image from "next/image";
 
- 
 export default async function Main() {
 /*     const [produtos, setProdutos] = useState([]);
 
@@ -12,7 +10,6 @@ export default async function Main() {
           const data = await response.json();
             setProdutos(data);
         };
-    
         fetch();
       }, []); */
 
@@ -20,21 +17,28 @@ export default async function Main() {
       const produtos = await response.json();
     
       return (
-  /*   <main className={styles.card}>  */
+   <main className={styles.main}> 
 
-        <div className="main">
+        {/* <div class="row" className={styles.row}>
+        <div class="column" className={styles.column}> */}
         {produtos.map((produto) => (
-        <div  className="card"key={produto. id}>
-        <img src={produto. image} alt={produto.title} />
-        <h3>{produto.title}</h3>
-        <p>{produto.description}</p>
-        <p>Category: {produto.category.name}</p>
-        <p>Price: ${produto.price}</p>
-        <p>Rating: {produto.rating.count}stars</p>
-        </div>
-        ))}
-        </div>
 
-       /*  </main> */
+        <div class="card" className={styles.card} key={produto. id}>
+          <br/>
+
+        <img src={produto. image} className={styles.image} alt={produto.title} />
+
+        <h3 className={styles.paragrafo}>{produto.title}</h3>
+        <p className={styles.paragrafo}>{produto.description}</p>
+        <p className={styles.paragrafo}>Category: {produto.category.name}</p>
+        <p className={styles.paragrafo}>Price: ${produto.price}</p>
+        <p className={styles.paragrafo}>Rating: {produto.rating.count}stars</p>
+
+        <button className={styles.button} class="button">Adicionar</button>
+
+        </div>
+        
+        ))}
+       </main>
            );
     }; 
