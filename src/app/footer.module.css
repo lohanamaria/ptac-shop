@@ -1,7 +1,11 @@
 .rodape{
     bottom: 0;
     position: fixed;
-    height: 30%;
+    height: 20%;
     width: 100%;
-    background-color: rgb(255, 173, 210);
+    background-color: rgb(195, 197, 252);
+}
+
+.ul{
+    font-size: 20px;
 }
