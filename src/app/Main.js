@@ -1,7 +1,12 @@
-'use server'
+'use client'
+import { useState, useEffect } from "react";
 import styles from "./main.module.css";
-
-export default async function Main() {
+import Spinner from "./Spinner"
+/* async eh so p server e funcao assincrona no renderiza o que eh recebido, n faz manuntecao e relacao de estados, como o useEffect
+no servidor n manipula, so vai receber e renderizar
+ja no cliente, as infos podem ser manipuladas, com uso de filter e useeffect
+ */
+export default function Main() {
 /*     const [produtos, setProdutos] = useState([]);
 
     useEffect(() => {
@@ -12,16 +17,63 @@ export default async function Main() {
         };
         fetch();
       }, []); */
+        const  [listProduct, setProduct] = useState([]);
 
-      const response = await fetch("https://fakestoreapi.com/products");
-      const produtos = await response.json();
+        useEffect(() => {      
+          const getProduct = async() => {      
+          const response = await fetch("https://fakestoreapi.com/products");
+          const data = await response.json();
+          setProduct(data);
+}
+          getProduct();
+         },[]);
+        /* acao de efeito vai surgir quando uma lista vazia existir */
+
+      const orderAz = () => {
+          const listAux = [...listProduct].sort((a, b) =>
+          a.title.localeCompare(b.title) );
+          
+        setProduct(listAux);
+        } 
     
+        const orderZa = () => {
+          const listAux = [...listProduct].sort((a, b) =>
+          b.title.localeCompare(a.title) );
+
+      /*    ou listAux = listAux.reverse(); 
+      rota ou componente ou lista*/
+        setProduct(listAux);
+
+        }
+        const ordermenorparamaior = () => {
+          const listAux = [...listProduct].sort((a, b) => a.price - b.price);
+          setProduct(listAux);
+        };
+        
+        const ordermaiorparamenor = () => {
+          const listAux = [...listProduct].sort((a, b) => b.price - a.price);
+          setProduct(listAux);
+        };
+    
+        if (listProduct[0] == null){
+return <Spinner/>
+        }
+
       return (
+        <> 
+        <div className={styles.filters}>
+        <div>
+          <button onClick={orderAz}> Az </button>
+          <button onClick={orderZa}> Za </button>
+          <button onClick={ordermaiorparamenor}> Preço decrescente </button>
+          <button onClick={ordermenorparamaior}> Preço crescente </button>
+        </div>
+        </div>
    <main className={styles.main}> 
 
         {/* <div class="row" className={styles.row}>
         <div class="column" className={styles.column}> */}
-        {produtos.map((produto) => (
+        {listProduct.map((produto) => (
 
         <div class="card" className={styles.card} key={produto. id}>
           <br/>
@@ -40,5 +92,6 @@ export default async function Main() {
         
         ))}
        </main>
-           );
-    }; 
+       </>
+      ); 
+        };
