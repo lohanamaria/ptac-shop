@@ -2,13 +2,14 @@
 import { useState, useEffect } from "react";
 import styles from "./main.module.css";
 import Spinner from "./Spinner"
+import ErrorFetch from "./ErrorFetch";
+
 /* async eh so p server e funcao assincrona no renderiza o que eh recebido, n faz manuntecao e relacao de estados, como o useEffect
 no servidor n manipula, so vai receber e renderizar
 ja no cliente, as infos podem ser manipuladas, com uso de filter e useeffect
  */
 export default function Main() {
 /*     const [produtos, setProdutos] = useState([]);
-
     useEffect(() => {
         const fetch = async () => {
           const response = await fetch("https://fakestoreapi.com/products");
@@ -18,13 +19,20 @@ export default function Main() {
         fetch();
       }, []); */
         const  [listProduct, setProduct] = useState([]);
-
+        const [listComplete, setListComplete] = useState({});
+        const [textSearch, setTextSearch] = useState([]);
+        const [isError, setIsError] = useState(false);
+  
         useEffect(() => {      
           const getProduct = async() => {      
           const response = await fetch("https://fakestoreapi.com/products");
           const data = await response.json();
-          setProduct(data);
+          setListProduct(data);
+          setListComplete(data);
 }
+          catch{
+            setIsError(true);
+          }
           getProduct();
          },[]);
         /* acao de efeito vai surgir quando uma lista vazia existir */
@@ -32,10 +40,8 @@ export default function Main() {
       const orderAz = () => {
           const listAux = [...listProduct].sort((a, b) =>
           a.title.localeCompare(b.title) );
-          
         setProduct(listAux);
         } 
-    
         const orderZa = () => {
           const listAux = [...listProduct].sort((a, b) =>
           b.title.localeCompare(a.title) );
@@ -43,7 +49,6 @@ export default function Main() {
       /*    ou listAux = listAux.reverse(); 
       rota ou componente ou lista*/
         setProduct(listAux);
-
         }
         const ordermenorparamaior = () => {
           const listAux = [...listProduct].sort((a, b) => a.price - b.price);
@@ -54,15 +59,37 @@ export default function Main() {
           const listAux = [...listProduct].sort((a, b) => b.price - a.price);
           setProduct(listAux);
         };
-    
-        if (listProduct[0] == null){
-return <Spinner/>
-        }
+
+const search = (text) => {
+setTextSearch(text);
+  if (text.trim() == ""){
+   setListProduct(listComplete);
+    return
+  }
+  const newList = listProduct.filter((produto) =>
+    produto.title.toUpperCase().trim().includes(textSearch.toUpperCase().trim())
+    );
+    setListProduct(newList);
+}
+  if(isError == true){
+    return <ErrorFetch/>
+  
+  }
+        if (listComplete[0] == null){
+         return (
+        <main className={styles.main}>
+          <Spinner/>
+        </main>
+        )}
 
       return (
         <> 
         <div className={styles.filters}>
         <div>
+
+<input type="text" value={textSearch} placeholder="Pesquise um produto"
+  onChange={(event) => textSearch(event.target.value) } />
+          
           <button onClick={orderAz}> Az </button>
           <button onClick={orderZa}> Za </button>
           <button onClick={ordermaiorparamenor}> Preço decrescente </button>
